@@ -1,0 +1,16 @@
+# 订阅链接
+- type: clash
+  options:
+    url: http://43.136.45.12:5000/free.yaml
+- type: subscribe
+  options:
+    url: http://43.136.45.12:5000/free.yaml
+- type: tgchannel
+  options:
+    channel: jiedian_share
+- type: webfuzz
+  options:
+    url: https://github.com/mksshare/mksshare.github.io
+- type: webfuzznyr
+  options:
+    url: https://github.com/mksshare/mksshare.github.io
