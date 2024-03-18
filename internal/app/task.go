@@ -86,14 +86,17 @@ func CrawlGo() {
 		healthcheck.DelayTimeout = time.Second * time.Duration(C.Config.HealthCheckTimeout)
 		log.Infoln("CONF: Health check timeout is set to %d seconds", C.Config.HealthCheckTimeout)
 	}
-
-	proxies = healthcheck.CleanBadProxiesWithGrpool(proxies)
-
-	log.Infoln("CrawlGo clash usable proxy count: %d", len(proxies))
-
 	// Format name like US_01 sorted by country
 	proxies.NameAddCounrty().Sort()
 	log.Infoln("Proxy rename DONE!")
+
+	proxies.NameAddIndex()
+	
+
+	proxies = healthcheck.CleanBadProxiesWithGrpool(proxies)
+	log.Infoln("CrawlGo clash usable proxy count: %d", len(proxies))
+
+
 
 	// Relay check and rename
 	healthcheck.RelayCheck(proxies)
@@ -110,7 +113,7 @@ func CrawlGo() {
 		}
 	}
 
-	proxies.NameAddIndex()
+	//proxies.NameAddIndex()
 
 	// 可用节点存储
 	cache.SetProxies("proxies", proxies)

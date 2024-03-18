@@ -20,41 +20,30 @@ var (
 
 type Vless struct {
 	Base
-	UUID      		string            `yaml:"uuid"`
-	UDP        		bool              `yaml:"bool"`
-	SNI        		string            `yaml:"sni"`
-	Network    		string            `yaml:"type" `
-	Flow        	string            `yaml:"flow"`
-	Servername   	string            `yaml:"sni"`
-	ClientFingerprint	string            `yaml:"fp"`
-	TLS          	string            `yaml:"security"`
-	Alpn 			string 
-	WSOpts             WSOptions
-	GrpcOpts		GrpcOptions
+	UUID      		string            `yaml:"uuid" json:"uuid"`
+	SNI        		string            `yaml:"sni" json:"sni"`
+	Network    		string            `yaml:"network,omitempty" json:"network,omitempty"`
+	Flow        	string            	  `yaml:"flow,omitempty" json:"flow,omitempty"`
+	Servername   	string            	  `yaml:"servername,omitempty" json:"servername,omitempty"`
+	ClientFingerprint	string            `yaml:"client-fingerprint,omitempty" json:"client-fingerprint,omitempty"`
+	TLS            bool              	  `yaml:"tls,omitempty" json:"tls,omitempty"`
+	Tfo 			bool 		  `yaml:"tfo" json:"tfo"`
+	SkipCertVerify bool              	  `yaml:"skip-cert-verify,omitempty" json:"skip-cert-verify,omitempty"`
+	Wsopts             WSOptions              `yaml:"ws-opts,omitempty" json:"ws-opts,omitempty"`
+	GrpcOpts	   GrpcOptions		  `yaml:"grpc-opts,omitempty" json:"grpc-opts,omitempty"`
+	RealOpts	   RealOptions		  `yaml:"reality-opts,omitempty" json:"reality-opts,omitempty"`
 }
 type WSOptions struct {
-	Path    string            `yaml:"path,omitempty" json:"path,omitempty"`
-	Headers map[string][]string `yaml:"headers,omitempty" json:"headers,omitempty"`
+	Path    string            `yaml:"Path,omitempty" json:"Path,omitempty"`
+	Headers map[string]string `yaml:"headers,omitempty" json:"headers,omitempty"`
 }
 type GrpcOptions struct {
-	Method  string              `yaml:"method,omitempty" json:"method,omitempty"`
-	Path    []string            `yaml:"path,omitempty" json:"path,omitempty"`
-	Headers map[string][]string `yaml:"headers,omitempty" json:"headers,omitempty"`
+	Grpcname  string              `yaml:"grpc-service-name,omitempty" json:"grpc-service-name,omitempty"`
 }
-/**
-protocol://
-	$(uuid)
-	@
-	remote-host
-	:
-	remote-port
-?
-	<protocol-specific fields>
-	<transport-specific fields>
-	<tls-specific fields>
-#$(descriptive-text)
-*/
-
+type RealOptions struct {
+	Pbk    string            `yaml:"public-key,omitempty" json:"public-key,omitempty"`
+	Sid    string            `yaml:"short-id,omitempty" json:"short-id,omitempty"`
+}
 func (t Vless) Identifier() string {
 	return net.JoinHostPort(t.Server, strconv.Itoa(t.Port)) + t.UUID
 }
@@ -127,25 +116,41 @@ func ParseVlessLink(link string) (*Vless, error) {
 	sni, _ = url.QueryUnescape(sni)
 	Network := moreInfos.Get("type")
 	Network, _ = url.QueryUnescape(Network)
-	TLS := moreInfos.Get("security")
-	TLS, _ = url.QueryUnescape(TLS)
-
+	tls := moreInfos.Get("security")
+	tls, _ = url.QueryUnescape(tls)
+	tlss := false
+	if tls == "tls" {
+		tlss = true
+	}
 	ClientFingerprint := moreInfos.Get("fp")
 	ClientFingerprint, _ = url.QueryUnescape(ClientFingerprint)
 	Servername := moreInfos.Get("sni")
 	Servername, _ = url.QueryUnescape(Servername)
 	flow := moreInfos.Get("flow")
-	
-
 	wsops := WSOptions{}
+	grpcops := GrpcOptions{}
+	realops := RealOptions{}
+	if tls == "reality" {
+		realops.Pbk= moreInfos.Get("pbk")
+		realops.Sid= moreInfos.Get("sid")
+	}
 	if Network != "" {
 			switch Network {
 			case "ws":
-				//host := make([]string, 0)
+				
+				wsHeaders := make(map[string]string)
+				host := moreInfos.Get("host")
+				wsHeaders["Host"] = host
+				wsops.Headers = wsHeaders
 				wsops.Path= moreInfos.Get("path")
-				//wsops.Headers["host"] = append(host, moreInfos.Get("host"))
+				if wsops.Path == ""{
+					wsops.Path = "/"
+				}
 			case "tcp":
 				flow, _ = url.QueryUnescape(flow)
+			case "grpc":
+				grpcNmae := moreInfos.Get("serviceNmae")
+				grpcops.Grpcname, _ = url.QueryUnescape(grpcNmae)
 			}
 	}
 
@@ -161,11 +166,14 @@ func ParseVlessLink(link string) (*Vless, error) {
 		SNI:               sni,
 		Network:           Network,
 		Flow:              flow,
-		Servername: 	 sni,
+		Servername: 	   sni,
 		ClientFingerprint:  ClientFingerprint,
-		TLS:                TLS,
-		WSOpts:             wsops,
-		//GrpcOpts:           sni,
+		TLS:                tlss,
+		Wsopts:             wsops,
+		GrpcOpts:           grpcops,
+		RealOpts:           realops,
+		SkipCertVerify:    false,
+		Tfo:    false,
 	}, nil
 }
 
