@@ -2,63 +2,27 @@
   <br>proxypool<br>
 </h1>
 
-<h5 align="center">自动抓取tg频道、订阅地址、公开互联网上的ss、ssr、vmess、trojan节点信息，聚合去重测试可用性后提供节点列表</h5>
-
-<p align="center">
-  <a href="https://github.com/bh-qt/proxypool/actions">
-    <img src="https://img.shields.io/github/workflow/status/bh-qt/proxypool/Go?style=flat-square" alt="Github Actions">
-  </a>
-  <a href="https://goreportcard.com/report/github.com/bh-qt/proxypool">
-    <img src="https://goreportcard.com/badge/github.com/bh-qt/proxypool?style=flat-square">
-  </a>
-  <a href="https://github.com/bh-qt/proxypool/releases">
-    <img src="https://img.shields.io/github/release/bh-qt/proxypool/all.svg?style=flat-square">
-  </a>
-</p>
+<h5 align="center">自动抓取tg频道、订阅地址、公开互联网上的ss、ssr、vmess、trojan、vless节点信息，去重测试可用性后提供节点列表</h5>
 
 ## 支持
 
-- 支持ss、ssr、vmess、trojan多种类型
+- 支持ss、ssr、vmess、trojan、vless多种类型
 - Telegram频道抓取
 - 订阅地址抓取解析
 - 公开互联网页面模糊抓取
 - 定时抓取自动更新
 - 通过配置文件设置抓取源
-- 自动检测节点可用性
+- 自动检测节点可用性（不支持vless，H2）
 - 提供clash、surge配置文件
 - 提供ss、ssr、vmess、sip002订阅
 
 ## 安装
 
-以下五选一。
-
-### 1. 使用Heroku
-
-点击按钮进入部署页面，填写基本信息然后运行
-
-其中 `DOMAIN` 需要填写为你需要绑定的域名，`CONFIG_FILE` 需要填写你的配置文件路径。
-
-> heroku app域名为appname.herokuapp.com。项目内配置文件为./config/config.yaml
-
-配置文件模板见 config/config.yaml 文件，可选项区域均可不填。完整配置选项请查看[配置文件说明](https://github.com/bh-qt/proxypool/wiki/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%B4%E6%98%8E)。
-
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
-
-> 因为爬虫程序需要持续运行，所以至少选择 $7/月 的配置
-> 免费配置长时间无人访问会被heroku强制停止
-
-### 2. 使用[fly.io](https://fly.io)
-
-> 注册fly.io需要绑定银行卡，支持银联借记卡。同时使用fly.io主要通过命令行工具flyctl，详情到[fly.io](https://fly.io)官网了解。
-
-下载仓库源代码，修改 `fly.toml` 中的app与domain。在终端使用 `flyctl deploy` 部署即可。
-
-### 3. 从源码编译
 
 需要安装Golang
 
 ```shell
-$ go get -u -v github.com/bh-qt/proxypool
+$ git clone https://github.com/hefangcan/proxypool.git
 ```
 
 运行
@@ -72,33 +36,6 @@ $ go run main.go -c ./config/config.yaml
 ```shell
 $ make
 ```
-
-### 4. 下载预编译程序
-
-从这里下载预编译好的程序 [release](https://github.com/bh-qt/proxypool/releases)。
-
-### 5. 使用docker
-
-运行下面的命令下载 proxypool 镜像
-
-```shell
-$ docker pull ghcr.io/bh-qt/proxypool:latest
-```
-
-然后运行 proxypool 即可
-
-```shell
-$ docker run -d --restart=always \
-  --name=proxypool \
-  -p 12580:12580 \
-  -v /path/to/config:/proxypool-src/config \
-  ghcr.io/bh-qt/proxypool \
-  -c config/config.yaml
-```
-
-使用 `-p` 参数映射配置文件里的端口  
-使用 `-v` 参数指定配置文件夹位置（配置文件要自行下载放到目录,方便修改）  
-使用 `-c` 参数指定配置文件路径，支持http链接
 
 ## 使用
 
@@ -124,15 +61,11 @@ $ proxypool -c ./config/config.yaml
 
 本地运行时Clash配置文件访问：<http://127.0.0.1:[端口]/clash/localconfig>
 
+查看所有节点信息查看：<https://domain/clash/proxies?type=all>
+
 ## 本地检查节点可用性
 
 此项非必须。为了提高实际可用性，可选择增加一个本地服务器，检测远程proxypool节点在本地的可用性并提供配置，见[proxypoolCheck](https://github.com/bh-qt/proxypoolCheck)。
-
-## 截图
-
-![Speedtest](docs/speedtest.png)
-
-![Fast](docs/fast.png)
 
 ## 声明
 
