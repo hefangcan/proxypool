@@ -27,18 +27,18 @@ func CrawlGo() {
 	dbProxies := database.GetAllProxies()
 	// Show last time result when launch
 	if proxies == nil && dbProxies != nil {
-		//cache.SetProxies("proxies", dbProxies)
+		cache.SetProxies("proxies", dbProxies)
 		cache.LastCrawlTime = "抓取中，已载入上次数据库数据"
 		log.Infoln("Database: loaded")
 	}
 	if dbProxies != nil {
 		proxies = dbProxies.UniqAppendProxyList(proxies)
 	}
-	//if proxies == nil {
-	//	proxies = make(proxy.ProxyList, 0)
-	//}
+	if proxies == nil {
+		proxies = make(proxy.ProxyList, 0)
+	}
 
-	proxies = make(proxy.ProxyList, 0)
+	//proxies = make(proxy.ProxyList, 0)
 
 	go func() {
 		wg.Wait()
@@ -77,6 +77,11 @@ func CrawlGo() {
 	cache.TrojanProxiesCount = proxies.TypeLen("trojan")
 	log.Infoln("TrojanProxiesCount: %d", cache.TrojanProxiesCount)
 	cache.LastCrawlTime = time.Now().In(location).Format("2006-01-02 15:04:05")
+	// Format name like US_01 sorted by country
+	proxies.NameAddCounrty()
+	log.Infoln("Proxy rename DONE!")
+	
+
 
 	// Health Check
 	log.Infoln("Now proceed proxy health check...")
@@ -86,13 +91,9 @@ func CrawlGo() {
 		healthcheck.DelayTimeout = time.Second * time.Duration(C.Config.HealthCheckTimeout)
 		log.Infoln("CONF: Health check timeout is set to %d seconds", C.Config.HealthCheckTimeout)
 	}
-	// Format name like US_01 sorted by country
-	proxies.NameAddCounrty().Sort()
-	log.Infoln("Proxy rename DONE!")
 
-	proxies.NameAddIndex()
 	
-
+	proxies.NameAddIndex()
 	proxies = healthcheck.CleanBadProxiesWithGrpool(proxies)
 	log.Infoln("CrawlGo clash usable proxy count: %d", len(proxies))
 
@@ -105,7 +106,8 @@ func CrawlGo() {
 			if s.Relay {
 				_, c, e := geoIp.GeoIpDB.Find(s.OutIp)
 				if e == nil {
-					proxies[i].SetName(fmt.Sprintf("%s", c))
+					proxies[i].SetName(fmt.Sprintf("真_%s", c))
+					//log.Infoln("CrawlGo clash usable proxy count: %s", c)
 				}
 			} else if s.Pool {
 				proxies[i].SetName(fmt.Sprintf("Pool_%s", proxies[i].BaseInfo().Name))
@@ -113,7 +115,7 @@ func CrawlGo() {
 		}
 	}
 
-	//proxies.NameAddIndex()
+	proxies.NameAddIndex()
 
 	// 可用节点存储
 	cache.SetProxies("proxies", proxies)
@@ -164,3 +166,5 @@ func SpeedTest(proxies proxy.ProxyList) {
 		cache.IsSpeedTest = "未开启"
 	}
 }
+
+
