@@ -62,7 +62,13 @@ $ proxypool -c ./config/config.yaml
 本地运行时Clash配置文件访问：<http://127.0.0.1:[端口]/clash/localconfig>
 
 查看所有节点信息查看：<https://domain/clash/proxies?type=all>
+## 结语
 
+clash年久失修，不支持VLESS测速。可配合其他如clash.meta,或xarY内核进行测速检测
+
+发现一个很致命的问题，明明能联通得，程序检测不成功，暂未细看
+
+后面的想法是固定住节点名称，按日期排序，目前节点名是不固定的
 
 ## 声明
 
