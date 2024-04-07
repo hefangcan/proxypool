@@ -63,9 +63,6 @@ $ proxypool -c ./config/config.yaml
 
 查看所有节点信息查看：<https://domain/clash/proxies?type=all>
 
-## 本地检查节点可用性
-
-此项非必须。为了提高实际可用性，可选择增加一个本地服务器，检测远程proxypool节点在本地的可用性并提供配置，见[proxypoolCheck](https://github.com/bh-qt/proxypoolCheck)。
 
 ## 声明
 

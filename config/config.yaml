@@ -1,5 +1,5 @@
 # your domain
-domain: home.kjol.cc
+domain: pan.kjol.cc
 port: 12580                 # default 12580
 
 # source list file
@@ -11,8 +11,8 @@ source-files:
 
 # ======= 可选项，留空使用default值  =======
 
-# postgresql database info
-database_url: ""
+# mysql database info
+database_url: "hefangcan:hefangcan@tcp(192.168.2.251:3306)/proxy?charset=utf8mb4&parseTime=True&loc=Local"
 
 # interval between each crawling
 crawl-interval: 180    # v0.5.x default 60 (minutes)
