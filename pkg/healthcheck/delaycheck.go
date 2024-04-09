@@ -94,7 +94,7 @@ func testDelay(p proxy.Proxy) (delay uint16, err error) {
 	defer close(respC)
 	go func() {
 		sTime := time.Now()
-		err = HTTPHeadViaProxy(clashProxy, "http://www.gstatic.com/generate_204")
+		err = HTTPHeadViaProxy(clashProxy, "http://www.apple.com/library/test/success.html")
 		m.Lock()
 		if closed {
 			m.Unlock()

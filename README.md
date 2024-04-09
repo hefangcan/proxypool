@@ -43,17 +43,12 @@ $ make
 
 ### 修改配置文件
 
-首先修改 config.yaml 中的必要配置信息。带有默认值的字段均可不填写。完整的配置选项见[配置文件说明](https://github.com/bh-qt/proxypool/wiki/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%B4%E6%98%8E)
+首先修改 config.yaml 中的必要配置信息。带有默认值的字段均可不填写。
+抓取源该为单独文件，方便更新整理
 
-### 启动程序
-
-使用 `-c` 参数指定配置文件路径，支持http链接
-
-```shell
-$ proxypool -c ./config/config.yaml
-```
-
-如果需要部署到VPS，更多细节请[查看wiki](https://github.com/bh-qt/proxypool/wiki/%E9%83%A8%E7%BD%B2%E5%88%B0VPS-Step-by-Step)。
+config/clash.txt
+config/subscribe.txt
+config/tgchannel.txt
 
 ## Clash配置文件
 
@@ -68,7 +63,7 @@ clash年久失修，不支持VLESS测速。可配合其他如clash.meta,或xarY�
 
 发现一个很致命的问题，明明能联通得，程序检测不成功，暂未细看
 
-后面的想法是固定住节点名称，按日期排序，目前节点名是不固定的
+固定住节点名称，按日期排序，节点名是固定的
 
 ## 声明
 

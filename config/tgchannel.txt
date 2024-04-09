@@ -27,7 +27,6 @@ juzibaipiao
 forwardv2ray
 Alpha_V2rays
 Polproxy
-VPNCLOP
 lrnbymaa
 VmessProtocol
 ConfigsHUB

@@ -79,7 +79,7 @@ func initGetters(sourceFiles []string) {
 							log.Debugln("init getter: %s %v", source.Type, scanner.Text())
 						}
 				}
-			}else if source.Type == "subscribe1" {
+			}else if source.Type == "subscribe" {
 				file,err := os.Open("/root/proxypool/config/subscribe.txt")
 				if err != nil {continue}
 				defer file.Close()

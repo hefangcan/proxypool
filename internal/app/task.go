@@ -121,7 +121,7 @@ func CrawlGo() {
 	cache.SetProxies("proxies", proxies)
 	cache.UsefullProxiesCount = proxies.Len()
 	database.SaveProxyList(proxies)
-	database.ClearOldItems()
+	//database.ClearOldItems()
 
 	log.Infoln("Usablility checking done. Open %s to check", C.Config.Domain+":"+C.Config.Port)
 
